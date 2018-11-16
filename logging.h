@@ -23,7 +23,7 @@ typedef enum logging_flags_t
 } logging_flags_t;
 
 #ifdef _DEBUGGING
-#define DEBUG(lev, fmt, ...) show_msg(DEBUG, (lev), __func__, __LINE__, fmt __VA_OPT__(, ) __VA_ARGS__)
+#define DEBUG(lev, fmt, ...) show_msg(DEBUG, (lev), __func__, __LINE__, fmt, ##__VA_ARGS__)
 #define ENTER() show_msg(ENTER, 5, __func__, __LINE__, "")
 #define VRET(v) show_msg(RETURN, 5, __func__, __LINE__, ##v)
 #define RET() show_msg(RETURN, 5, __func__, __LINE__, "")
@@ -34,11 +34,11 @@ typedef enum logging_flags_t
 #define RET()
 #endif
 
-#define INFO(fmt, ...) show_msg(INFO, 1, __func__, __LINE__, fmt __VA_OPT__(, ) __VA_ARGS__)
-#define WARN(fmt, ...) show_msg(WARN, 0, __func__, __LINE__, fmt __VA_OPT__(, ) __VA_ARGS__)
-#define ERROR(fmt, ...) show_msg(ERROR, 0, __func__, __LINE__, fmt __VA_OPT__(, ) __VA_ARGS__)
-#define SYNTAX(fmt, ...) show_msg(SYNTAX, 0, __func__, __LINE__, fmt __VA_OPT__(, ) __VA_ARGS__)
-#define INTERNAL(fmt, ...) show_msg(INTERNAL, 0, __func__, __LINE__, fmt __VA_OPT__(, ) __VA_ARGS__)
-#define FATAL(fmt, ...) show_msg(FATAL, 0, __func__, __LINE__, fmt __VA_OPT__(, ) __VA_ARGS__)
+#define INFO(fmt, ...) show_msg(INFO, 1, __func__, __LINE__, fmt, ##__VA_ARGS__)
+#define WARN(fmt, ...) show_msg(WARN, 0, __func__, __LINE__, fmt, ##__VA_ARGS__)
+#define ERROR(fmt, ...) show_msg(ERROR, 0, __func__, __LINE__, fmt, ##__VA_ARGS__)
+#define SYNTAX(fmt, ...) show_msg(SYNTAX, 0, __func__, __LINE__, fmt, ##__VA_ARGS__)
+#define INTERNAL(fmt, ...) show_msg(INTERNAL, 0, __func__, __LINE__, fmt, ##__VA_ARGS__)
+#define FATAL(fmt, ...) show_msg(FATAL, 0, __func__, __LINE__, fmt, ##__VA_ARGS__)
 
 #endif /* _LOGGING_H_ */
