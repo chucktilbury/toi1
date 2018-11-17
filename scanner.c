@@ -30,30 +30,8 @@ void init_scanner(const char *fname)
 
 int get_token(void)
 {
-
 }
 
 const char *get_token_string(void)
 {
-
-}
-
-int get_token_index(void)
-{
-
-}
-
-int get_token_line(void)
-{
-
-}
-
-const char *get_token_file(void)
-{
-
-}
-
-const char *token_to_str(token_t tok)
-{
-
 }

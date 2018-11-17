@@ -5,6 +5,7 @@ void open_file(const char *fname);
 int get_char(void);
 void unget_char(int ch);
 int line_number(void);
+int line_index(void);
 const char *file_name(void);
 int total_lines(void);
 

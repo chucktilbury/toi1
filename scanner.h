@@ -3,9 +3,10 @@
 
 typedef enum
 {
-    ERROR_TOK = 2000, // returned when the scanner can't scan the input for semantic reasons.
-    END_OF_FILE,    // lets the parser know that a context change is happening
-    END_OF_INPUT,   // signals the end of all input
+    FIRST_TOK = 2000, // just the number of the first token
+    ERROR_TOK,        // returned when the scanner can't scan the input for semantic reasons.
+    END_OF_FILE,      // lets the parser know that a context change is happening
+    END_OF_INPUT,     // signals the end of all input
     // constructed tokens, literals
     SYMBOL_TOK, // [a-zA-Z_$]+[a-zA-Z_$0-9]*
     UINT_TOK,   // 0[xX][0-9a-fA-F]+
@@ -86,15 +87,8 @@ typedef enum
 
 // must be called before any other scanner function
 void init_scanner(const char *fname);
-
 // These functions are used mostly by the parser
 int get_token(void);
 const char *get_token_string(void);
-
-// these functions are used mostly for error handling
-int get_token_index(void);
-int get_token_line(void);
-const char *get_token_file(void);
-const char *token_to_str(token_t tok);
 
 #endif /* _SCANNER_H_ */

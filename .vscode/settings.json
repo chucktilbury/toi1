@@ -1,0 +1,3 @@
+{
+    "C_Cpp.default.defines": ["_DEBUGGING", "_CRT_SECURE_NO_WARNINGS 1"]
+}

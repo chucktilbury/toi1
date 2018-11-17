@@ -12,6 +12,7 @@ static struct file_stack
     char *fname;
     FILE *fp;
     int line;
+    int index;
     struct file_stack *next;
 } *pfile_stack = NULL;
 static int isinit = 0;
@@ -82,9 +83,6 @@ void open_file(const char *fname)
     RET();
 }
 
-// TODO: Buffer whole lines so that they can be referred to for error
-// messaging.
-
 /*
     Returns every  character found in the stream. If it's the end of the
     file, then return 0x01. If it's the end of the input, then return 0x00.
@@ -107,11 +105,13 @@ int get_char(void)
         else if (ch == '\n')
         {
             pfile_stack->line++;
+            pfile_stack->index = 0;
             tot_lines++;
             VRET(ch);
         }
         else
         {
+            pfile_stack->index++;
             VRET(ch);
         }
     }
@@ -122,7 +122,10 @@ void unget_char(int ch)
 {
     ENTER();
     if (NULL != pfile_stack)
+    {
         ungetc(ch, pfile_stack->fp);
+        pfile_stack->index--;
+    }
     RET();
 }
 
@@ -132,6 +135,20 @@ int line_number(void)
     if (NULL != pfile_stack)
     {
         VRET(pfile_stack->line);
+    }
+    else
+    {
+        INFO("no file is open");
+        VRET(-1);
+    }
+}
+
+int line_index(void)
+{
+    ENTER();
+    if (NULL != pfile_stack)
+    {
+        VRET(pfile_stack->index);
     }
     else
     {
