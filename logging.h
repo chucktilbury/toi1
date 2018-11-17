@@ -37,9 +37,7 @@ void show_msg(typelog_t type, int lev, const char *func, int line, const char *f
 #endif
 
 #define INFO(fmt, ...) show_msg(INFO, 1, __func__, __LINE__, fmt, ##__VA_ARGS__)
-#define WARN(fmt, ...) show_msg(WARN, 0, __func__, __LINE__, fmt, ##__VA_ARGS__)
 #define ERROR(fmt, ...) show_msg(ERROR, 0, __func__, __LINE__, fmt, ##__VA_ARGS__)
-#define SYNTAX(fmt, ...) show_msg(SYNTAX, 0, __func__, __LINE__, fmt, ##__VA_ARGS__)
 #define INTERNAL(fmt, ...) show_msg(INTERNAL, 0, __func__, __LINE__, fmt, ##__VA_ARGS__)
 #define FATAL(fmt, ...) show_msg(FATAL, 0, __func__, __LINE__, fmt, ##__VA_ARGS__)
 

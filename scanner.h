@@ -71,6 +71,7 @@ typedef enum
     COLON_TOK,  // ":"
     COMMA_TOK,  // ","
     DOT_TOK,    // "."
+    ASSIGN_TOK, // "="
     // misc tokens
     CREATE_TOK,  // "create"
     DESTROY_TOK, // "destroy"
@@ -78,7 +79,7 @@ typedef enum
     TRUE_TOK,    // "true" | "yes"
     FALSE_TOK,   // "false" | "no"
     // reserved characters, not allowed in any token
-    RESERVED_TOK, // "`@#\\" The "#" is used for comments. other chars are allowed in strings.
+    RESERVED_TOK, // "?`@#\\" The "#" is used for comments. other chars are allowed in strings.
     // just marks the highest number defined
     LAST_TOKEN
 } token_t;

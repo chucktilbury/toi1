@@ -82,6 +82,9 @@ void open_file(const char *fname)
     RET();
 }
 
+// TODO: Buffer whole lines so that they can be referred to for error
+// messaging.
+
 /*
     Returns every  character found in the stream. If it's the end of the
     file, then return 0x01. If it's the end of the input, then return 0x00.
