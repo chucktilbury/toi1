@@ -69,7 +69,7 @@ void show_verbose_start(int type, const char *func, int line)
 
     write_str("[%02d/%02d/%d %02d:%02d:%02d] %s: %s: %d: ",
               t->tm_mon, t->tm_mday, t->tm_year + 1900,
-              (t->tm_hour==0)?12:t->tm_hour, 
+              (t->tm_hour==0)?12:t->tm_hour,
               t->tm_min, t->tm_sec,
               type_strs[type], func, line);
 }
@@ -170,26 +170,3 @@ void init_logging(logging_flags_t flags, ...)
         atexit(clean_log_file);
     }
 }
-
-
-#if 1
-int main(void)
-{
-
-    init_logging(LOG_STDOUT | LOG_FILE, "logfile.txt");
-    set_debug_level(10);
-
-    DEBUG(5, "This is a message: %d", 123);
-    set_debug_level(5);
-    DEBUG(6, "This is a message: %d", 1234);
-    ENTER();
-    RET();
-    SYNTAX("this is a syntax error");
-    INFO("this is a info");
-    set_debug_level(0);
-    INFO("this is a info");
-    ENTER();
-    RET();
-    return 0;
-}
-#endif
