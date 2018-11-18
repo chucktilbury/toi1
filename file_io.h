@@ -1,6 +1,7 @@
 #ifndef _FILE_IO_H_
 #define _FILE_IO_H_
 
+void init_file_io(void);
 void open_file(const char *fname);
 int get_char(void);
 void unget_char(int ch);

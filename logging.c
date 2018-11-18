@@ -8,6 +8,8 @@
 #include <time.h>
 #include "logging.h"
 
+// TODO: add the ability to push and pop debug levels.
+
 static FILE *outfp[4];
 static int debug_level = 0; // no debugging messages
 static const char *type_strs[] = {

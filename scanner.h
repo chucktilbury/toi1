@@ -88,7 +88,7 @@ typedef enum
 // must be called before any other scanner function
 void init_scanner(const char *fname);
 // These functions are used mostly by the parser
-int get_token(void);
+token_t get_token(void);
 const char *get_token_string(void);
 
 #endif /* _SCANNER_H_ */
