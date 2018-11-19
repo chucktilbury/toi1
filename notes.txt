@@ -1,0 +1,6 @@
+ToDo:
+1. parse contexts
+2. hash tables
+3. symbol tables
+4. symbol attribute tables
+5. parser
