@@ -113,7 +113,7 @@ void show_msg(typelog_t type, int lev, const char *func, int line, const char *f
         {
             show_start(type);
             va_start(args, fmt);
-            write_str(fmt, args);
+            write_args(fmt, args);
             va_end(args);
             write_str("\n");
         }
@@ -122,7 +122,7 @@ void show_msg(typelog_t type, int lev, const char *func, int line, const char *f
     {
         show_start(type);
         va_start(args, fmt);
-        write_str(fmt, args);
+        write_args(fmt, args);
         va_end(args);
         write_str("\n");
         if (type == FATAL)

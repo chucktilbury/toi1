@@ -1,0 +1,25 @@
+"a \x4c4f56452020string"
+""
+t
+\n
+x
+"" 
+
+""his is 
+a 'multi'-\nline string
+literal
+""
+123.123e123 asdf 123 
+123.123  # comment #
+
+class func not !! 'asdfg sadf':;.>= = ==
+
+''
+this is 
+a \n'
+multi-line
+string''
+
+#######
+multi #line comment
+###########

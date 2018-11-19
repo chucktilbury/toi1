@@ -50,6 +50,8 @@ typedef enum
     NOT_TOK,              // "!!" | "not" | "!"
     // arithmetic operators
     PLUS_TOK,  // "+"
+    INCREMENT_TOK, // "++"
+    DECREMENT_TOK, // "--"
     MINUS_TOK, // "-"
     MUL_TOK,   // "*"
     DIV_TOK,   // "/"

@@ -23,6 +23,8 @@ typedef enum logging_flags_t
 } logging_flags_t;
 
 void show_msg(typelog_t type, int lev, const char *func, int line, const char *fmt, ...);
+void set_debug_level(int lev);
+void init_logging(logging_flags_t flags, ...);
 
 #ifdef _DEBUGGING
 #define DEBUG(lev, fmt, ...) show_msg(DEBUG, (lev), __func__, __LINE__, fmt, ##__VA_ARGS__)

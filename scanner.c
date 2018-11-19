@@ -43,45 +43,6 @@ typedef struct
     token_t tok;
 } token_map_t;
 
-static const token_map_t singles_map[] = {
-    {"(", OPAREN_TOK},
-    {")", CPAREN_TOK},
-    {"[", OSQU_TOK},
-    {"]", CSQU_TOK},
-    {"{", OCURLY_TOK},
-    {"}", CCURLY_TOK},
-    {";", SEMI_TOK},
-    {":", COLON_TOK},
-    {",", COMMA_TOK},
-    {".", DOT_TOK},
-    {NULL, ERROR_TOK},
-};
-
-static const token_map_t operators_map[] = {
-    {"!!", NOT_TOK},
-    {"!", NOT_TOK},
-    {"!=", NEQUAL_TOK},
-    {"-", MINUS_TOK},
-    {"%", MOD_TOK},
-    {"&", LAND_TOK},
-    {"&&", AND_TOK},
-    {"*", MUL_TOK},
-    {"/", DIV_TOK},
-    {"^", LXOR_TOK},
-    {"|", LOR_TOK},
-    {"||", OR_TOK},
-    {"~", LNOT_TOK},
-    {"+", PLUS_TOK},
-    {"<", LSHL_TOK},
-    {"<<", LESS_TOK},
-    {"<=", LESS_OR_EQUAL_TOK},
-    {"=", ASSIGN_TOK},
-    {"==", EQUAL_TOK},
-    {">", LSHR_TOK},
-    {">=", GREATER_OR_EQUAL_TOK},
-    {">>", GREATER_TOK}};
-//{NULL, ERROR_TOK}};
-
 // This table must be maintained in sorted order.
 static const token_map_t keywords_map[] = {
     {"and", AND_TOK},
@@ -148,8 +109,8 @@ static inline void add_char(int ch)
     token_buffer_index++;
     if (token_buffer_index >= TOKEN_BUFFER_SIZE)
     {
-        ERROR("token buffer overrun. Token has been discarded.");
-        clear_bufer();
+        FATAL("token buffer overrun");
+        clear_buffer();
     }
 }
 
@@ -182,11 +143,6 @@ static token_t check_keyword(const char *str)
     return bfind(keywords_map, MAP_SIZE(keywords_map), str);
 }
 
-static token_t check_operator(const char *str)
-{
-    return bfind(operators_map, MAP_SIZE(operators_map), str);
-}
-
 /*
     Public interface
 */
@@ -196,7 +152,7 @@ void init_scanner(const char *fname)
     char *str;
 
     // init the file_io
-    //init_file_io();
+    init_file_io();
 
     // set up the scanner's internal tables
     for (i = 0; i < CHAR_TABLE_SIZE; i++)
@@ -221,15 +177,18 @@ void init_scanner(const char *fname)
 
     str = " \n\r\t";
     for (i = 0; str[i] != 0; i++)
-        char_table[i] = WHITESP;
+        char_table[(int)str[i]] = WHITESP;
 
     str = "(){}[]:;,.";
     for (i = 0; str[i] != 0; i++)
-        char_table[i] = SINGLES;
+        char_table[(int)str[i]] = SINGLES;
 
-    str = "%%^&*-+=/!|<>";
+    str = "%^&*-+=/!|<>";
     for (i = 0; str[i] != 0; i++)
-        char_table[i] = OPERATORS;
+        char_table[(int)str[i]] = OPERATORS;
+
+    if (fname != NULL)
+        open_file(fname);
 }
 
 /*
@@ -239,6 +198,147 @@ void init_scanner(const char *fname)
 */
 static token_t get_operator()
 {
+    int ch;
+    token_t retv = ERROR_TOK;
+
+    switch (token_buffer[0])
+    {
+        // these are always single characters
+    case '*':
+        retv = MUL_TOK;
+        break;
+    case '/':
+        retv = DIV_TOK;
+        break;
+    case '%':
+        retv = MOD_TOK;
+        break;
+    case '~':
+        retv = LNOT_TOK;
+        break;
+    case '^':
+        retv = LXOR_TOK;
+        break;
+
+        // these may be 1 or 2 chars long
+    case '!':
+        ch = get_char();
+        if (ch == '!')
+        {
+            add_char(ch);
+            retv = NOT_TOK;
+        }
+        else
+        {
+            unget_char(ch);
+            retv = NOT_TOK;
+        }
+        break;
+    case '|':
+        ch = get_char();
+        if (ch == '|')
+        {
+            add_char(ch);
+            retv = OR_TOK;
+        }
+        else
+        {
+            unget_char(ch);
+            retv = LOR_TOK;
+        }
+        break;
+    case '&':
+        ch = get_char();
+        if (ch == '&')
+        {
+            add_char(ch);
+            retv = AND_TOK;
+        }
+        else
+        {
+            unget_char(ch);
+            retv = LAND_TOK;
+        }
+        break;
+    case '>':
+        ch = get_char();
+        if (ch == '>')
+        {
+            add_char(ch);
+            retv = GREATER_TOK;
+        }
+        else if (ch == '=')
+        {
+            add_char(ch);
+            retv = GREATER_OR_EQUAL_TOK;
+        }
+        else
+        {
+            unget_char(ch);
+            retv = LSHR_TOK;
+        }
+        break;
+    case '<':
+        ch = get_char();
+        if (ch == '<')
+        {
+            add_char(ch);
+            retv = LESS_TOK;
+        }
+        else if (ch == '=')
+        {
+            add_char(ch);
+            retv = LESS_OR_EQUAL_TOK;
+        }
+        else
+        {
+            unget_char(ch);
+            retv = LSHL_TOK;
+        }
+        break;
+    case '+':
+        ch = get_char();
+        if (ch == '+')
+        {
+            add_char(ch);
+            retv = INCREMENT_TOK;
+        }
+        else
+        {
+            unget_char(ch);
+            retv = PLUS_TOK;
+        }
+        break;
+    case '-':
+        ch = get_char();
+        if (ch == '-')
+        {
+            add_char(ch);
+            retv = DECREMENT_TOK;
+        }
+        else
+        {
+            unget_char(ch);
+            retv = MINUS_TOK;
+        }
+        break;
+    case '=':
+        ch = get_char();
+        if (ch == '=')
+        {
+            add_char(ch);
+            retv = EQUAL_TOK;
+        }
+        else
+        {
+            unget_char(ch);
+            retv = ASSIGN_TOK;
+        }
+        break;
+    default:
+        INTERNAL("invalid state found in %s", __func__);
+    }
+    return retv;
 }
 
 /*
@@ -248,6 +348,138 @@ static token_t get_operator()
 */
 static token_t get_single()
 {
+    token_t retv = ERROR_TOK;
+
+    switch (token_buffer[0])
+    {
+    case '(':
+        retv = OPAREN_TOK;
+        break;
+    case ')':
+        retv = CPAREN_TOK;
+        break;
+    case '{':
+        retv = OCURLY_TOK;
+        break;
+    case '}':
+        retv = CCURLY_TOK;
+        break;
+    case '[':
+        retv = OSQU_TOK;
+        break;
+    case ']':
+        retv = CSQU_TOK;
+        break;
+    case ';':
+        retv = SEMI_TOK;
+        break;
+    case ':':
+        retv = COLON_TOK;
+        break;
+    case ',':
+        retv = COMMA_TOK;
+        break;
+    case '.':
+        retv = DOT_TOK;
+        break;
+    default:
+        INTERNAL("invalid state found in %s", __func__);
+    }
+    return retv;
+}
+
+// Read hex digits and put the resulting 2 digit numbers into the string. If
+// the number of hex digits found is odd, then the odd one will be the high
+// order nibble in the word. Any number of digits can be included.
+static void do_hex_escape(void)
+{
+    int ch;
+    int finished = 0;
+    int count = 0;
+    char buf[4];
+
+    buf[0] = '0';
+    buf[1] = '0';
+    buf[2] = 0;
+    while (!finished)
+    {
+        ch = get_char();
+        if (ch == END_FILE || ch == END_INPUT)
+        {
+            warning("unexpected end of file encountered reading string");
+            finished++;
+        }
+        else
+        {
+            if (isxdigit(ch))
+            {
+                buf[count++] = ch;
+                if (count >= 2)
+                {
+                    add_char((int)strtol(buf, NULL, 16));
+                    buf[0] = '0';
+                    buf[1] = '0';
+                    buf[2] = 0;
+                    count = 0;
+                }
+            }
+            else
+            {
+                add_char(ch);
+                finished++;
+            }
+        }
+    }
+}
+
+static void do_escape(void)
+{
+    int ch;
+    int finished = 0;
+
+    ch = get_char();
+    if (ch == END_FILE || ch == END_INPUT)
+    {
+        warning("unexpected end of file encountered reading string");
+        finished++;
+    }
+    else
+    {
+        if (ch == 'x' || ch == 'X')
+            do_hex_escape();
+        else
+        {
+            switch (ch)
+            {
+            case 'a':
+                add_char('\a');
+                break;
+            case 'b':
+                add_char('\b');
+                break;
+            case 'e':
+                add_char(0x1b);
+                break;
+            case 'f':
+                add_char('\f');
+                break;
+            case 'n':
+                add_char('\n');
+                break;
+            case 'r':
+                add_char('\r');
+                break;
+            case 't':
+                add_char('\t');
+                break;
+            case 'v':
+                add_char('\v');
+                break;
+            default:
+                add_char(ch);
+            }
+        }
+    }
 }
 
 /*
@@ -261,6 +493,81 @@ static token_t get_single()
 */
 static token_t get_dquote()
 {
+    int ch;
+    int finished = 0;
+    token_t retv = ERROR_TOK;
+    int state = 0;
+
+    while (!finished)
+    {
+        ch = get_char();
+        if (ch == END_FILE || ch == END_INPUT)
+        {
+            warning("unexpected end of file encountered reading string");
+            finished++;
+        }
+        else
+        {
+            switch (state)
+            {
+            case 0: // check to see if we have a multi-line
+                if (ch != '\"')
+                {
+                    state = 1;
+                    add_char(ch);
+                }
+                else
+                    state = 2;
+                break;
+            case 1: // single line cannot have a '\n'
+                if (ch == '\n')
+                {
+                    syntax("unterminated quoted string");
+                    finished++;
+                }
+                else if (ch == '\"')
+                {
+                    retv = STRING_TOK;
+                    finished++;
+                }
+                else if (ch == '\\')
+                    do_escape();
+                else
+                    add_char(ch);
+                break;
+            case 2:             // copy a multi-line string
+                if (ch == '\"') // could be the end of the string
+                    state = 3;
+                else if (ch == '\\')
+                    do_escape();
+                else
+                    add_char(ch);
+                break;
+            case 3:
+                if (ch == '\"') // found the end of the string
+                {
+                    retv = STRING_TOK;
+                    finished++;
+                }
+                else if (ch == '\\')
+                {
+                    add_char('\"'); // else save the quote
+                    do_escape();
+                }
+                else
+                {
+                    add_char('\"'); // else save the quote
+                    add_char(ch);   // and the new character
+                    state = 2;      // go back to reading a multi-line string
+                }
+                break;
+            default:
+                INTERNAL("unexpected state in %s", __func__);
+                break;
+            }
+        }
+    }
+    return retv;
 }
 
 /*
@@ -273,6 +580,72 @@ static token_t get_dquote()
 */
 static token_t get_squote()
 {
+    int ch;
+    int finished = 0;
+    token_t retv = ERROR_TOK;
+    int state = 0;
+
+    while (!finished)
+    {
+        ch = get_char();
+        if (ch == END_FILE || ch == END_INPUT)
+        {
+            warning("unexpected end of file encountered reading string");
+            finished++;
+        }
+        else
+        {
+            switch (state)
+            {
+            case 0: // check to see if we have a milti-line
+                if (ch != '\'')
+                {
+                    state = 1;
+                    add_char(ch);
+                }
+                else
+                    state = 2;
+                break;
+            case 1: // single line cannot have a '\n'
+                if (ch == '\n')
+                {
+                    syntax("unterminated quoted string");
+                    finished++;
+                }
+                else if (ch == '\'')
+                {
+                    retv = STRING_TOK;
+                    finished++;
+                }
+                else
+                    add_char(ch);
+                break;
+            case 2:             // copy a multi-line string
+                if (ch == '\'') // could be the end of the string
+                    state = 3;
+                else
+                    add_char(ch);
+                break;
+            case 3:
+                if (ch == '\'') // found the end of the string
+                {
+                    retv = STRING_TOK;
+                    finished++;
+                }
+                else
+                {
+                    add_char('\''); // else save the single quote
+                    add_char(ch);   // and the new character
+                    state = 2;      // go back to reading a multi-line string
+                }
+                break;
+            default:
+                INTERNAL("unexpected state in %s", __func__);
+                break;
+            }
+        }
+    }
+    return retv;
 }
 
 /*
@@ -282,6 +655,34 @@ static token_t get_squote()
 */
 static token_t get_symbol()
 {
+    int ch;
+    int finished = 0;
+    token_t retv = ERROR_TOK;
+
+    while (!finished)
+    {
+        ch = get_char();
+        if (ch == END_FILE || ch == END_INPUT)
+        {
+            warning("unexpected end of file encountered reading symbol");
+            finished++;
+        }
+        else
+        {
+            if (CHAR_TYPE(ch) == SYMCHARS)
+                add_char(ch);
+            else
+            {
+                unget_char(ch);
+                finished++;
+            }
+        }
+    }
+
+    retv = check_keyword(token_buffer);
+    if (retv == 0)
+        retv = SYMBOL_TOK;
+    return retv;
 }
 
 /*
@@ -298,7 +699,7 @@ static token_t get_hex(void)
         ch = get_char();
         if (ch == END_FILE || ch == END_INPUT)
         {
-            warning("unexpected end of file encountered reading float");
+            warning("unexpected end of file encountered reading hex number");
             finished++;
         }
         else if (isxdigit(ch))
@@ -373,7 +774,7 @@ static token_t get_float(void)
             case 2: // read digits until the end
                 if (isdigit(ch))
                     add_char(ch);
-                else if (CHAR_TYPE(ch) != OPERATORS && CHAR_TYPE(ch) != SINGLES)
+                else if (CHAR_TYPE(ch) != OPERATORS && CHAR_TYPE(ch) != SINGLES && CHAR_TYPE(ch) != WHITESP)
                 {
                     syntax("malformed floating point number: %s", token_buffer);
                     unget_char(ch);
@@ -566,13 +967,14 @@ token_t get_token(void)
     int finished = 0;
     token_t retv;
 
+    clear_buffer();
     while (!finished)
     {
         ch = get_char();
-        switch (char_type(ch))
+        switch (CHAR_TYPE(ch))
         {
         case ILLEGAL:
-            ERROR("illegal character encountered: %02X. Discarded.", ch);
+            ERROR("illegal character encountered: 0x%02X. Discarded.", ch);
             break;
         case NUMERIC:
             add_char(ch);
@@ -634,41 +1036,18 @@ const char *get_token_string(void)
 
 int main(void)
 {
+    token_t tok;
 
-    int i;
-    char *lst1[] = {
-        "!!",
-        "!",
-        "!=",
-        "-",
-        "%%",
-        "&",
-        "&&",
-        "*",
-        "/",
-        "^",
-        "|",
-        "||",
-        "~",
-        "+",
-        "<",
-        "<<",
-        "<=",
-        "==",
-        ">",
-        ">=",
-        ">>",
-        NULL};
-    for (i = 0; lst1[i] != NULL; i++)
-        fprintf(stderr, "token value for %s is %d\n", lst1[i], bfind(operators_map, MAP_SIZE(operators_map), lst1[i]));
+    init_logging(LOG_STDERR);
+    set_debug_level(10);
+    init_scanner("scanner1.txt");
 
-    char *lst[] = {
-        "import", "yes", "and", "try", "uint", "foo", "aaa", "or",
-        "if", "else", "switch", "case", "try", "except", "while",
-        "for", "cont", "break", "return", NULL};
-    for (i = 0; lst[i] != NULL; i++)
-        fprintf(stderr, "token value for %s is %d\n", lst[i], bfind(keywords_map, MAP_SIZE(keywords_map), lst[i]));
-
+    while (tok != END_OF_INPUT)
+    {
+        tok = get_token();
+        printf("token: %d str: \"%s\" desc: %s\n", tok, get_token_string(), token_to_msg(tok));
+        printf("   line: %d index: %d\n", line_number(), line_index());
+    }
     return 0;
 }
 

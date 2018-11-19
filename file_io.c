@@ -69,16 +69,18 @@ void open_file(const char *fname)
     if (NULL == (tfs = calloc(1, sizeof(struct file_stack))))
         FATAL("Cannot allocate memory file new file stack");
 
-    if (NULL == (tfs->fname = _strdup(fname)))
+    if (NULL == (tfs->fname = strdup(fname)))
         FATAL("Cannot allocate memory file file name: %s", fname);
 
     if (NULL == (tfs->fp = fopen(fname, "r")))
         FATAL("Cannot open input file: %s: %s", fname, strerror(errno));
 
+    tfs->line = 1;
+    tfs->index = 1;
     if (NULL != pfile_stack)
         tfs->next = pfile_stack;
     pfile_stack = tfs;
-
+    
     INFO("Opened file: %s", fname);
     RET();
 }
@@ -105,7 +107,7 @@ int get_char(void)
         else if (ch == '\n')
         {
             pfile_stack->line++;
-            pfile_stack->index = 0;
+            pfile_stack->index = 1;
             tot_lines++;
             VRET(ch);
         }
