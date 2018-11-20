@@ -1,4 +1,5 @@
 ToDo:
+0. finish testing the scanner
 1. parse contexts
 2. hash tables
 3. symbol tables

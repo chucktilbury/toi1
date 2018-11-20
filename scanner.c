@@ -150,7 +150,8 @@ void init_scanner(const char *fname)
 {
     int i;
     char *str;
-
+    
+    ENTER();
     // init the file_io
     init_file_io();
 
@@ -189,6 +190,7 @@ void init_scanner(const char *fname)
 
     if (fname != NULL)
         open_file(fname);
+    RET();
 }
 
 /*
@@ -1040,7 +1042,7 @@ int main(void)
 
     init_logging(LOG_STDERR);
     set_debug_level(10);
-    init_scanner("scanner1.txt");
+    init_scanner("tests/scanner1.txt");
 
     while (tok != END_OF_INPUT)
     {

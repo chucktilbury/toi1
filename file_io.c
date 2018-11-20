@@ -20,7 +20,7 @@ static int tot_lines = 0;
 
 static void close_file(void)
 {
-    ENTER();
+    //ENTER();
     struct file_stack *tfs;
 
     if (NULL != pfile_stack)
@@ -32,7 +32,7 @@ static void close_file(void)
         free(tfs->fname);
         free(tfs);
     }
-    RET();
+    //RET();
 }
 
 static void close_all_files(void)
@@ -93,7 +93,7 @@ void open_file(const char *fname)
 */
 int get_char(void)
 {
-    ENTER();
+    //ENTER();
     int ch;
 
     if (NULL != pfile_stack)
@@ -102,22 +102,26 @@ int get_char(void)
         if (ch == EOF)
         {
             close_file();
-            VRET(0x01);
+            //VRET(0x01);
+            return 0x01;
         }
         else if (ch == '\n')
         {
             pfile_stack->line++;
             pfile_stack->index = 1;
             tot_lines++;
-            VRET(ch);
+            //VRET(ch);
+            return ch;
         }
         else
         {
             pfile_stack->index++;
-            VRET(ch);
+            //VRET(ch);
+            return ch;
         }
     }
-    VRET(0x00); // no file is open
+    //VRET(0x00); // no file is open
+    return 0x00;
 }
 
 void unget_char(int ch)

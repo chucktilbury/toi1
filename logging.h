@@ -29,7 +29,7 @@ void init_logging(logging_flags_t flags, ...);
 #ifdef _DEBUGGING
 #define DEBUG(lev, fmt, ...) show_msg(DEBUG, (lev), __func__, __LINE__, fmt, ##__VA_ARGS__)
 #define ENTER() show_msg(ENTER, 5, __func__, __LINE__, "")
-#define VRET(v) do{show_msg(RETURN, 5, __func__, __LINE__, ##v);return((v));}while(0)
+#define VRET(v) do{show_msg(RETURN, 5, __func__, __LINE__, #v);return((v));}while(0)
 #define RET() do{show_msg(RETURN, 5, __func__, __LINE__, "");return;}while(0)
 #else
 #define DEBUG(lev, fmt, ...)
