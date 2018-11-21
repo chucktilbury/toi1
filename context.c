@@ -13,25 +13,13 @@
 #include "logging.h"
 #include "errors.h"
 #include "context.h"
+#include "hash_table.h"
 
 #define CONTEXT_SIZE 1024 * 2
 #define PAD 2
 
 static char context[CONTEXT_SIZE];
 static char temp_context[CONTEXT_SIZE];
-
-uint64_t hash(char *str)
-{
-    uint64_t hash = 5381;
-    int c;
-
-    while (0 != (c = *str++))
-    {
-        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
-    }
-
-    return hash;
-}
 
 void init_context(void)
 {
@@ -89,10 +77,10 @@ const char *make_context(const char *symb)
 const char *push_anon_context(void)
 {
     ENTER();
-    uint64_t h = hash(context);
+    uint32_t h = make_hash(context);
     char buf[17];
 
-    sprintf(buf, "%16lX", h);
+    sprintf(buf, "%08X", h);
     VRET(push_context(buf));
 }
 

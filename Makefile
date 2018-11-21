@@ -1,44 +1,44 @@
 
-OBJS 	= 	file_stack.o \
+OBJS 	= 	file_io.o \
 			logging.o \
-			lexer.o \
-			parser.o \
-			parse_import.o \
-			parse_method_def.o \
-			parse_statements.o \
+			errors.o \
+			scanner.o \
+			context.o \
+			hash_table.o \
+			symbols.o \
+			xxhash.o \
 			toi.o
 
-HEADERS	=	sym_table.h \
-			context.h \
-			file_stack.h \
+HEADERS	=	file_io.h \
 			logging.h \
-			lexer.h \
-			parser.h \
-			parse_import.h \
-			parse_method_def.h \
-			parse_statements.h \
+			errors.h \
+			scanner.h \
+			context.h \
+			hash_table.h \
+			symbols.h \
+			xxhash.h \
 			toi.h
 
 TARGET 	=	toi
 CARGS	=	-Wall -Wextra -g
 
 .cpp.o: 
-	g++ $(CARGS) -c $<
+	gcc $(CARGS) -c $<
 
 all: $(TARGET)
 
 $(TARGET): $(OBJS) $(HEADERS)
-	g++ -g -o $(TARGET) $(OBJS)
+	gcc -g -o $(TARGET) $(OBJS)
 
-toi.o: toi.cpp $(HEADERS)
-file_stack.o: file_stack.cpp $(HEADERS)
-logging.o: logging.cpp $(HEADERS)
-lexer.o: lexer.cpp $(HEADERS)
-parser.o: parser.cpp $(HEADERS)
-context.o: context.cpp $(HEADERS)
-parse_import.o: parse_import.cpp $(HEADERS)
-parse_method_def.o: parse_method_def.cpp $(HEADERS)
-parse_statements.o: parse_statements.cpp $(HEADERS)
+file_io.o: file_io.c $(HEADERS)
+logging.o: logging.c $(HEADERS)
+errors.o: errors.c $(HEADERS)
+scanner.o: scanner.c $(HEADERS)
+context.o: context.c $(HEADERS)
+hash_table.o: hash_table.c $(HEADERS)
+symbols.o: symbols.c $(HEADERS)
+xxhash.o: xxhash.c $(HEADERS)
+toi.o: toi.c $(HEADERS)
 
 clean:
 	rm -f $(TARGET) $(OBJS)

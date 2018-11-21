@@ -11,3 +11,9 @@ static void init_toi(const char* fname) {
     init_scanner(fname);
     init_context();
 }
+
+int main(void)
+{
+    init_toi("tests/scanner1.txt");
+    return 0;
+}
