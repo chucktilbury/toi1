@@ -26,7 +26,7 @@ typedef struct __htt__ {
 ht_handle_t create_hash_table(int slots)
 {
     hash_table_t *ht;
-
+    ENTER();
     if(NULL == (ht = (hash_table_t *)calloc(1, sizeof(hash_table_t)))) 
         FATAL("cannot allocate hash table struct");
 
@@ -34,11 +34,12 @@ ht_handle_t create_hash_table(int slots)
         FATAL("cannot allocate hash table");
 
     ht->slots = slots;
-    return (ht_handle_t)ht;
+    VRET((ht_handle_t)ht);
 }
 
 void destroy_hash_table(ht_handle_t ht)
 {
+    ENTER();
     hash_table_entry_t *next, *hte;
     hash_table_t* table = (hash_table_t*)ht;
 
@@ -57,6 +58,7 @@ void destroy_hash_table(ht_handle_t ht)
             }
         }
     }
+    RET();
 }
 
 uint32_t make_hash(const char *str)

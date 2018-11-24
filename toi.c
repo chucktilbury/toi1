@@ -7,9 +7,10 @@
 static void init_toi(const char* fname) {
 
     init_logging(LOG_STDOUT);
-    init_file_io();
+    set_debug_level(10);
     init_scanner(fname);
     init_context();
+    init_symbol_table();
 }
 
 int main(void)

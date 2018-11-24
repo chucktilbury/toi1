@@ -20,9 +20,9 @@ HEADERS	=	file_io.h \
 			toi.h
 
 TARGET 	=	toi
-CARGS	=	-Wall -Wextra -g
+CARGS	=	-Wall -Wextra -g -D_DEBUGGING
 
-.cpp.o: 
+.c.o: 
 	gcc $(CARGS) -c $<
 
 all: $(TARGET)
