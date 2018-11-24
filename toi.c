@@ -15,6 +15,7 @@ static void init_toi(const char* fname) {
 
 int main(void)
 {
-    init_toi("tests/scanner1.txt");
+    init_toi("tests/parse1.txt");
+    parse();
     return 0;
 }

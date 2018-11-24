@@ -7,6 +7,9 @@ OBJS 	= 	file_io.o \
 			hash_table.o \
 			symbols.o \
 			xxhash.o \
+			parse.o \
+			class_def.o \
+			import_def.o \
 			toi.o
 
 HEADERS	=	file_io.h \
@@ -17,6 +20,9 @@ HEADERS	=	file_io.h \
 			hash_table.h \
 			symbols.h \
 			xxhash.h \
+			parse.h \
+			class_def.h \
+			import_def.h \
 			toi.h
 
 TARGET 	=	toi
@@ -38,7 +44,10 @@ context.o: context.c $(HEADERS)
 hash_table.o: hash_table.c $(HEADERS)
 symbols.o: symbols.c $(HEADERS)
 xxhash.o: xxhash.c $(HEADERS)
+parse.o: parse.c $(HEADERS)
 toi.o: toi.c $(HEADERS)
+class_def.o: class_def.c  $(HEADERS)
+import_def.o: import_def.c $(HEADERS)
 
 clean:
 	rm -f $(TARGET) $(OBJS)

@@ -8,5 +8,6 @@
 #include "hash_table.h"
 #include "symbols.h"
 #include "context.h"
+#include "parse.h"
 
 #endif /* _TOI_H_ */

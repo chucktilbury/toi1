@@ -15,8 +15,8 @@ typedef enum
     STRING_TOK, // single quoted string are absolute literal, double quoted string can have escapes.
     // scope definitions
     IMPORT_TOK, // "import"
-    CLASS_TOK,  // "class"
-    FUNC_TOK,   // "func"
+    //CLASS_TOK,  // "class"
+    //FUNC_TOK,   // "func"
     // native types
     UINT_DEF_TOK,  // "uint" | "unsigned"
     INT_DEF_TOK,   // "int" | "integer"

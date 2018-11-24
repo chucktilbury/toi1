@@ -35,7 +35,7 @@ int add_symbol(const char *sym)
 {
     sattr_table_t tab;
 
-    if (NULL == (tab = (sattr_table_t)calloc(NUM_SYMBOL_ATTRS, sizeof(void*))))
+    if (NULL == (tab = (sattr_table_t)calloc(NUM_SYMBOL_ATTRS, sizeof(void *))))
         FATAL("cannot allocate memry for symbol attribute table");
 
     return hash_save(symbol_table, sym, tab);
@@ -65,8 +65,8 @@ void *get_symbol_attr(const char *sym, sym_attr_t type)
     sattr_table_t tab;
 
     tab = hash_find(symbol_table, sym);
-    if(tab != NULL)
-        return tab[type];   // could be NULL
+    if (tab != NULL)
+        return tab[type]; // could be NULL
     else
         return NULL;
 }
