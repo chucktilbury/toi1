@@ -1,7 +1,10 @@
-ToDo:
-0. finish testing the scanner
-1. parse contexts
-2. hash tables
-3. symbol tables
-4. symbol attribute tables
-5. parser
+
+Using the "shunting yard" algorithm when parsing an expression.
+
+Need to create unit tests and a test framework.
+
+Fix bug in file_io.c where files appear to be closed before we are actualy 
+finished with them.
+
+Resolve the design issue with symbol attributes being saved. Do I keep them in 
+an array or a hash? Do I need to store more than one of the same type?

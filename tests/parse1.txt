@@ -1,1 +1,11 @@
-import something
+########################################################################
+#
+#   This is a test file.
+#
+##########
+
+import something;
+
+class_name
+
+class_name

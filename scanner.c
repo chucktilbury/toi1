@@ -671,7 +671,7 @@ static token_t get_symbol()
         }
         else
         {
-            if (CHAR_TYPE(ch) == SYMCHARS)
+            if (CHAR_TYPE(ch) == SYMCHARS || CHAR_TYPE(ch) == NUMERIC)
                 add_char(ch);
             else
             {

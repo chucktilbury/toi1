@@ -10,17 +10,20 @@
 void do_end_file(void)
 {
     ENTER();
+    INFO("END OF FILE");
     RET();
 }
 
 void do_end_input(void)
 {
     ENTER();
+    INFO("END OF INPUT");
     RET();
 }
 
 void parse(void)
 {
+    ENTER();
     int finished = 0;
     token_t tok;
 
@@ -37,6 +40,7 @@ void parse(void)
             break;
         case END_OF_FILE:
             do_end_file();
+            finished++;
             break;
         case END_OF_INPUT:
             do_end_input();
@@ -48,4 +52,5 @@ void parse(void)
             break;
         }
     }
+    RET();
 }

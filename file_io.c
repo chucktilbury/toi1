@@ -7,6 +7,15 @@
 
 #include "logging.h"
 
+// TODO:
+// (BUG) Current file needs to remain open until the possibility of 
+//       the line or name getting pulled has ended. The file gets closed 
+//       when a new character is requested, not when the file actually closes.
+//
+// (ENH) Buffer some amount of text and place tokens in some kind of 
+//       buffer to make it quicker to scan them.
+//
+
 static struct file_stack
 {
     char *fname;
@@ -17,6 +26,7 @@ static struct file_stack
 } *pfile_stack = NULL;
 static int isinit = 0;
 static int tot_lines = 0;
+static int close_file_flag = 0;
 
 static void close_file(void)
 {
@@ -31,6 +41,10 @@ static void close_file(void)
         fclose(tfs->fp);
         free(tfs->fname);
         free(tfs);
+        if (NULL != pfile_stack)
+            INFO("switch to file: %s", pfile_stack->fname);
+        else 
+            INFO("no files are open");
     }
     //RET();
 }
@@ -93,16 +107,26 @@ void open_file(const char *fname)
 */
 int get_char(void)
 {
-    //ENTER();
     int ch;
 
     if (NULL != pfile_stack)
     {
+        // this causes the file to be closed after we are finished 
+        // with it.
+        if(close_file_flag)
+        {
+            close_file();
+            close_file_flag = 0;
+            if(pfile_stack == NULL)
+                return 0x00;
+            else 
+                return 0x01;
+        }
+
         ch = fgetc(pfile_stack->fp);
         if (ch == EOF)
         {
-            close_file();
-            //VRET(0x01);
+            close_file_flag = 1;
             return 0x01;
         }
         else if (ch == '\n')
@@ -110,17 +134,14 @@ int get_char(void)
             pfile_stack->line++;
             pfile_stack->index = 1;
             tot_lines++;
-            //VRET(ch);
             return ch;
         }
         else
         {
             pfile_stack->index++;
-            //VRET(ch);
             return ch;
         }
     }
-    //VRET(0x00); // no file is open
     return 0x00;
 }
 

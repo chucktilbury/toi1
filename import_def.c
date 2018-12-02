@@ -17,13 +17,17 @@
 #include "logging.h"
 #include "errors.h"
 #include "scanner.h"
+#include "parse.h"
+#include "context.h"
+#include "file_io.h"
 
 #define FNAME_SIZE 1024
 
 static void decorate_import(const char *token, char *buf)
 {
-    // stubbed
-    strcpy(buf, token);
+    // stubbed. just a canned file for testing.
+    strcpy(buf, "tests/");
+    strcat(buf, token);
     strcat(buf, ".toi");
 }
 
@@ -37,8 +41,10 @@ void do_import(void)
     if (tok == SYMBOL_TOK)
     {
         push_context(get_token_string());
+        INFO("context: %s", get_context());
         decorate_import(get_token_string(), fname);
         open_file(fname);
+        parse();
 
         tok = get_token();
         if (tok != SEMI_TOK)
