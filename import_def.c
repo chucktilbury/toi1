@@ -41,7 +41,6 @@ void do_import(void)
     if (tok == SYMBOL_TOK)
     {
         push_context(get_token_string());
-        INFO("context: %s", get_context());
         decorate_import(get_token_string(), fname);
         open_file(fname);
         parse();
@@ -49,6 +48,8 @@ void do_import(void)
         tok = get_token();
         if (tok != SEMI_TOK)
             expect_token(SEMI_TOK, tok, NULL);
+
+        pop_context();
     }
     else
         expect_token(SYMBOL_TOK, tok, "import failed");

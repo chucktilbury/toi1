@@ -6,6 +6,13 @@
 
 import something;
 
-class_name
+class_name(
+    ##
+    multi-line comment allowed here
+    ##
+    class1,
+    # single line comment allowed here #
+    class2
+){}
 
-class_name
+class_name(name1){}

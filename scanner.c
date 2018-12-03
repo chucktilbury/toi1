@@ -1025,7 +1025,7 @@ token_t get_token(void)
             break;
         }
     }
-    DEBUG(3, "returning token: %s (%d)", token_buffer, retv);
+    DEBUG(8, "returning token: %s (%d)", token_buffer, retv);
     VRET(retv);
 }
 

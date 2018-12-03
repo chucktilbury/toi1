@@ -37,6 +37,7 @@ const char *push_context(const char *symb)
 
     strcat(context, "@");
     strcat(context, symb);
+    INFO("context: %s", context);
     VRET(context);
 }
 
