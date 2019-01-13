@@ -3,7 +3,7 @@
 
     The top level file should already be open when this is called.
 */
-
+#include <stdio.h>
 
 #include "parse_inc.h"
 
@@ -35,7 +35,7 @@ void parse(void)
         case IMPORT_TOK:
             do_import();
             break;
-        case SYMBOL_TOK:
+        case CLASS_TOK:
             do_class();
             break;
         case END_OF_FILE:

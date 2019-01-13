@@ -1,26 +1,79 @@
 
-Using the "shunting yard" algorithm when parsing an expression. Unsolved 
+Adding scope to a symbol:
+
+class name:scope(params) {}
+func name:scope(inps)(outps) {}
+var type:scope:name = expr;
+
+The scope operator is optional. Default scope is "private".
+
+Funcs and vars that are defined outside a func can have private, public, or
+protected. Vars defined inside a func can not have a scope operator. Classes
+can have a public or private scope, but not protected. Scope is implemented
+using the context in which the object is defined.
+
+---------------------
+
+I need to just get through the parsing and accept correct syntax and reject
+incorrect syntax. And, I need to do it in such a way as to allow for future
+modifications, such as adding it to a parse tree. Contexts and symboltable
+references are okay. It's the symbol attributes that are a problem at the
+moment. Do I want to add them in a hash? Or do I want to add them into a list?
+It depends on how many and whether there are duplicates. I can't decide until
+I see the symbol table and try to put it into a parse tree.
+
+-------------
+
+Using the "shunting yard" algorithm when parsing an expression. Unsolved
 expressions are stored in RPN for resolution at runtime.
 
+---------------
+
 Need to create unit tests and a test framework. Testing framework will be a set
-of macros for asserting and a test main that uses them. THe test main() will 
-include the C files, rather than the headers to allow access to static data. If 
-a test needs a different set of mocks or stubs, then it will need to be in a 
-separate executable. A big test main() will aggrigate tests and run them, 
+of macros for asserting and a test main that uses them. THe test main() will
+include the C files, rather than the headers to allow access to static data. If
+a test needs a different set of mocks or stubs, then it will need to be in a
+separate executable. A big test main() will aggrigate tests and run them,
 reporting errors as needed. A unit test file can only include the code that is
 under test. Every other function call must be a mock or a stub. Mocks and stubs
-are individually kept in a single file and they are included via the test file 
-header. 
-??Each test has a data structure at the end that specifies the tests in 
+are individually kept in a single file and they are included via the test file
+header.
+??Each test has a data structure at the end that specifies the tests in
 the file. The tests are run via a macro. The main test runner searches the
 directory for executables named test_* and runs each one as a test.
+
+-------------
 
 Add functionality to file_io.c so that the tokens can be read from a string. To
 support interractive parsing.
 
-Resolve the design issue with symbol attributes being saved. Do I keep them in 
+-----------------
+
+Resolve the design issue with symbol attributes being saved. Do I keep them in
 an array or a hash? Do I need to store more than one of the same type?
 
-Change VRET macro to print values in addition to the var returned.
+-------------
+
+Change VRET macro to print values in addition to the var returned. Add a
+descriptor to indicate type. For example, an "s" indicates a string and "p"
+indicates a generic pointer.
+
+-------------
 
 Need to use a documentation framework.
+
+-------------
+
+Add functionality to push and pop debug levels to allow for different messages
+in different files or functions.
+
+-------------
+
+Add the locals to the error stuff to track the number of errors and warnings.
+If more than a certain number of errors are encountered, then abort the parser.
+
+----------------
+
+
+
+

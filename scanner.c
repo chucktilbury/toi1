@@ -48,7 +48,7 @@ static const token_map_t keywords_map[] = {
     {"and", AND_TOK},
     {"break", BREAK_TOK},
     {"case", CASE_TOK},
-//    {"class", CLASS_TOK},
+    {"class", CLASS_TOK},
     {"cont", CONTINUE_TOK},
     {"continue", CONTINUE_TOK},
     {"create", CREATE_TOK},
@@ -60,8 +60,8 @@ static const token_map_t keywords_map[] = {
     {"false", FALSE_TOK},
     {"float", FLOAT_DEF_TOK},
     {"for", FOR_TOK},
-//    {"func", FUNC_TOK},
-//    {"function", FUNC_TOK},
+    {"func", FUNC_TOK},
+    {"function", FUNC_TOK},
     {"geq", GREATER_OR_EQUAL_TOK},
     {"gt", GREATER_TOK},
     {"if", IF_TOK},
@@ -88,6 +88,7 @@ static const token_map_t keywords_map[] = {
     {"try", TRY_TOK},
     {"uint", UINT_DEF_TOK},
     {"unsigned", UINT_DEF_TOK},
+    {"var", VAR_TOK},
     {"while", WHILE_TOK},
     {"yes", TRUE_TOK}};
 #define MAP_SIZE(m) (sizeof(m) / sizeof(token_map_t))
@@ -150,7 +151,7 @@ void init_scanner(const char *fname)
 {
     int i;
     char *str;
-    
+
     ENTER();
     // init the file_io
     init_file_io();
@@ -957,6 +958,19 @@ static void get_comment(void)
             }
         }
     }
+}
+
+/*
+ * Unget all of the characters that are in the token buffer, last one first.
+ */
+void unget_token(void) {
+
+    int i;
+
+    INFO("unget symbol: %s", token_buffer);
+    for(i = token_buffer_index-1; i >= 0; i--)
+        unget_char(token_buffer[i]);
+    clear_buffer();
 }
 
 /*

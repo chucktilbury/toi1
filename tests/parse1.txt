@@ -6,13 +6,18 @@
 
 import something;
 
-class_name(
+class class_name:private (
     ##
     multi-line comment allowed here
     ##
     class1,
     # single line comment allowed here #
     class2
-){}
+){
+    var asdf:string:public = bondo;
+    var erter:int;
+    var zarp:uint = asdf;
+    var plarp:ert.tyu.wer;
+}
 
-class_name(name1){}
+class class_name:public (name1){}

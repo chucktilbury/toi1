@@ -1,4 +1,4 @@
-
+CC	=	clang
 OBJS 	= 	file_io.o \
 			logging.o \
 			errors.o \
@@ -28,13 +28,13 @@ HEADERS	=	file_io.h \
 TARGET 	=	toi
 CARGS	=	-Wall -Wextra -g -D_DEBUGGING
 
-.c.o: 
-	gcc $(CARGS) -c $<
+.c.o:
+	$(CC) $(CARGS) -c $<
 
 all: $(TARGET)
 
 $(TARGET): $(OBJS) $(HEADERS)
-	gcc -g -o $(TARGET) $(OBJS)
+	$(CC) -g -o $(TARGET) $(OBJS)
 
 file_io.o: file_io.c $(HEADERS)
 logging.o: logging.c $(HEADERS)

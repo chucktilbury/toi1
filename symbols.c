@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "sym_attrs.h"
 #include "errors.h"
 #include "logging.h"
 #include "symbols.h"
@@ -46,9 +47,10 @@ int check_symbol(const char *sym)
     return (hash_find(symbol_table, sym) == NULL) ? 0 : 1;
 }
 
-void add_symbol_attr(const char *sym, sym_attr_t type, void *data)
+void add_symbol_attr(const char *sym, sym_attr_t type, void *data, unsigned int size)
 {
     sattr_table_t tab;
+    void *ndat;
 
     tab = hash_find(symbol_table, sym);
     if (tab == NULL)
@@ -57,7 +59,11 @@ void add_symbol_attr(const char *sym, sym_attr_t type, void *data)
         tab = hash_find(symbol_table, sym);
     }
 
-    tab[type] = data;
+    if(NULL == (ndat = calloc(1, size)))
+        FATAL("cannot allocate memory for symbol attribute");
+
+    memcpy(ndat, data, size);
+    tab[type] = ndat;
 }
 
 void *get_symbol_attr(const char *sym, sym_attr_t type)

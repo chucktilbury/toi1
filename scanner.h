@@ -15,8 +15,9 @@ typedef enum
     STRING_TOK, // single quoted string are absolute literal, double quoted string can have escapes.
     // scope definitions
     IMPORT_TOK, // "import"
-    //CLASS_TOK,  // "class"
-    //FUNC_TOK,   // "func"
+    CLASS_TOK,  // "class"
+    FUNC_TOK,   // "func"
+    VAR_TOK,    // "var"
     // native types
     UINT_DEF_TOK,  // "uint" | "unsigned"
     INT_DEF_TOK,   // "int" | "integer"
@@ -91,6 +92,7 @@ typedef enum
 void init_scanner(const char *fname);
 // These functions are used mostly by the parser
 token_t get_token(void);
+void unget_token(void);
 const char *get_token_string(void);
 
 #endif /* _SCANNER_H_ */
